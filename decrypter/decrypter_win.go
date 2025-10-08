@@ -2,8 +2,9 @@ package decrypter
 
 import (
 	"errors"
-	"syscall"
 	"unsafe"
+
+	"golang.org/x/sys/windows"
 )
 
 func Chromium(key, encryptPass []byte) ([]byte, error) {
@@ -66,8 +67,8 @@ func (b *dataBlob) ToByteArray() []byte {
 // DPApi
 // chrome < 80 https://chromium.googlesource.com/chromium/src/+/76f496a7235c3432983421402951d73905c8be96/components/os_crypt/os_crypt_win.cc#82
 func DPApi(data []byte) ([]byte, error) {
-	dllCrypt := syscall.NewLazyDLL("Crypt32.dll")
-	dllKernel := syscall.NewLazyDLL("Kernel32.dll")
+	dllCrypt := windows.NewLazySystemDLL("Crypt32.dll")
+	dllKernel := windows.NewLazySystemDLL("Kernel32.dll")
 	procDecryptData := dllCrypt.NewProc("CryptUnprotectData")
 	procLocalFree := dllKernel.NewProc("LocalFree")
 	var outBlob dataBlob

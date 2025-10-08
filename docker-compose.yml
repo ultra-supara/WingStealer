@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  wingstealer-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wingstealer-dev
+    volumes:
+      - .:/app
+      - go-cache:/go/pkg/mod
+    environment:
+      - GOOS=windows
+      - GOARCH=amd64
+      - CGO_ENABLED=1
+      - CC=x86_64-w64-mingw32-gcc
+    working_dir: /app
+    command: tail -f /dev/null
+    # Uncomment below to run the build automatically
+    # command: go build -o WingStealer.exe .
+
+volumes:
+  go-cache:
